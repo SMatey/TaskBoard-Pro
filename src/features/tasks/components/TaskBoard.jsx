@@ -1,14 +1,15 @@
-import { useState } from "react"
+import { useReducer, useState } from "react"
 import { TaskForm } from "./TaskForm"
 import { TaskList } from "./TaskList"
 import { TASK_UI_TEXT } from "../constants/task-ui.constants"
 import { HTML_TAGS } from "../../../shared/constants/html-tags.constants"
 
 export function TaskBoard() {
+  const [taskText, setTaskText] = useState("")
+  const [tasks, dispatch] = useReducer(taskReducer, [])
+
   const SectionTag = HTML_TAGS.SECTION
   const HeadingTag = HTML_TAGS.H2
-  const [taskText, setTaskText] = useState("")
-  const [tasks, setTasks] = useState([])
 
   const handleTaskTextChange = (event) => {
     setTaskText(event.target.value)
@@ -25,7 +26,11 @@ export function TaskBoard() {
       completed: false,
     }
 
-    setTasks([...tasks, newTask])
+    dispatch({ 
+      type: TASK_ACTION_TYPES.ADD_TASK, 
+      payload: newTask, 
+    })
+    
     setTaskText("")
   }
 
